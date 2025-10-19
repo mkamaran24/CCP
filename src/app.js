@@ -1,4 +1,5 @@
 import express from "express";
+import { connectToLdap } from "./services/ldapService.js";
 import expressLayouts from "express-ejs-layouts";
 import bodyParser from "body-parser";
 import session from "express-session";
@@ -31,6 +32,20 @@ app.use(
     },
   })
 );
+
+app.post("/ldap-login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const isAuthenticated = await connectToLdap(username, password);
+
+  if (isAuthenticated) {
+    return res.json({ success: true, message: "LDAP login successful" });
+  } else {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid credentials" });
+  }
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
