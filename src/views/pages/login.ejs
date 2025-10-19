@@ -1,0 +1,91 @@
+<div class="row justify-content-center">
+  <div class="col-12 text-center mb-5">
+    <h1 class="display-5">CCP Portal</h1>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-lg">
+      <div class="card-body p-4">
+        <h2 class="card-title text-center mb-4">Login</h2>
+
+        <div
+          id="alertMessage"
+          class="alert alert-danger d-none"
+          role="alert"
+        ></div>
+
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="usernameInput" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="usernameInput"
+              name="username"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="passwordInput" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="passwordInput"
+              name="password"
+              required
+            />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Sign In</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add client-side logic to handle form submission and AJAX
+  document
+    .getElementById("loginForm")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Prevent standard form submission
+
+      const form = event.target;
+      const alertBox = document.getElementById("alertMessage");
+
+      // Hide previous alerts
+      alertBox.classList.add("d-none");
+      alertBox.textContent = "";
+
+      const username = form.elements.username.value;
+      const password = form.elements.password.value;
+
+      try {
+        const response = await fetch("/ldap-login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Login successful! Redirect to the protected area (e.g., home page)
+          window.location.href = data.redirect || "/";
+        } else {
+          // Login failed: Display error message
+          alertBox.textContent =
+            data.message || "An unknown error occurred during login.";
+          alertBox.classList.remove("d-none");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        alertBox.textContent = "Could not connect to the server.";
+        alertBox.classList.remove("d-none");
+      }
+    });
+</script>

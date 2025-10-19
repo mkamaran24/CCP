@@ -1,4 +1,4 @@
-import { sendRemoveOfferSOAP } from "../services/Offer/soapService.js";
+// import { sendRemoveOfferSOAP } from "../services/Offer/soapService.js";
 
 export const renderViewHomePage = (req, res) => {
   res.render("pages/Home", { response: { number: req.session.number } });

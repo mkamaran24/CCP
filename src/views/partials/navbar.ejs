@@ -1,3 +1,5 @@
+<% if (response) { %>
+
 <nav
   class="navbar fixed-top navbar-expand-lg"
   style="background-color: #e3f2fd"
@@ -30,6 +32,12 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Change-Language</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Change-IMEI</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
       </ul>
       <form action="/search" method="POST" class="d-flex" role="search">
         <input
@@ -44,3 +52,5 @@
     </div>
   </div>
 </nav>
+
+<% } %>
