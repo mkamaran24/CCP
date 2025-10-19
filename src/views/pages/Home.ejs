@@ -1,0 +1,67 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">
+      Subscriber Number - <% if (response && response.number) { %> <%=
+      response.number %> <% } else { %> (Number Not Found) <% } %>
+    </li>
+  </ol>
+</nav>
+
+<div class="container my-5">
+  <% if (response && response.number) { %>
+  <div class="row g-3">
+    <div class="col-sm-4">
+      <a
+        href="/offers/view"
+        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
+        style="transition: transform 0.2s; display: block"
+        onmouseover="this.style.transform='translateY(-5px)'"
+        onmouseout="this.style.transform='translateY(0)'"
+      >
+        <div class="card-body text-center py-4">
+          <h5 class="card-title text-uppercase fw-bold mb-0">Offers</h5>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-4">
+      <a
+        href="/free-units/view"
+        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
+        style="transition: transform 0.2s; display: block"
+        onmouseover="this.style.transform='translateY(-5px)'"
+        onmouseout="this.style.transform='translateY(0)'"
+      >
+        <div class="card-body text-center py-4">
+          <h5 class="card-title text-uppercase fw-bold mb-0">Free Units</h5>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-4">
+      <a
+        href="/balance-page"
+        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
+        style="transition: transform 0.2s; display: block"
+        onmouseover="this.style.transform='translateY(-5px)'"
+        onmouseout="this.style.transform='translateY(0)'"
+      >
+        <div class="card-body text-center py-4">
+          <h5 class="card-title text-uppercase fw-bold mb-0">
+            Account Balance
+          </h5>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <% } else { %>
+  <div class="alert alert-warning text-center" role="alert">
+    <h4 class="alert-heading">Welcome! Mohammed</h4>
+    <p class="mb-0">
+      Please use the search bar above to **enter your subscriber number** and
+      view your profile details.
+    </p>
+  </div>
+  <% } %>
+</div>

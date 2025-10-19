@@ -1,0 +1,30 @@
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h3 class="mb-3">Remove Offer</h3>
+    <form action="/remove-offer" method="POST">
+      <div class="mb-3">
+        <label class="form-label">MSISDN</label>
+        <input type="text" name="msisdn" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Offering ID</label>
+        <input type="text" name="offeringId" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-danger">Remove Offer</button>
+    </form>
+  </div>
+</div>
+
+<% if (response) { %>
+<script>
+  Swal.fire({
+    icon: '<%= response.code == "Unknown" ? "success" : "error" %>',
+    title: "CBS Response",
+    html: `
+        <b>Result Code:</b> <%= response.code == "Unknown" ? "0" : response.code%><br>
+        <b>Description:</b> <%= response.description %>
+      `,
+    confirmButtonText: "OK",
+  });
+</script>
+<% } %>
