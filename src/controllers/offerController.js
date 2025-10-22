@@ -1,9 +1,10 @@
 import { sendViewOfferSOAP } from "../services/Offer/viewService.js";
 import { sendRemoveOfferSOAP } from "../services/Offer/soapService.js";
+import { response } from "express";
 
 export const renderViewOfferPage = async (req, res) => {
   const result = await sendViewOfferSOAP(req.session.number);
-  res.render("pages/Offers", { offerings: result });
+  res.render("pages/Offers", { offerings: result, response: true });
 };
 
 export const handleDeleteOffer = async (req, res) => {

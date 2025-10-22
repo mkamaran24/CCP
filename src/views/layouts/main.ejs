@@ -15,10 +15,37 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
     />
+    <style>
+      /* Custom Shadow for a Material Design look (optional, as Bootstrap's shadow-lg is used below) */
+      .nav-shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 2px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Smooth Hover Effect for Nav Links */
+      .smooth-nav-link {
+        /* This is the key for smoothness */
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        /* Ensure text remains white */
+        color: white !important;
+        border-radius: 5px; /* Optional: adds rounded corners to the hover background */
+      }
+
+      .smooth-nav-link:hover {
+        /* Lighten the background color on hover */
+        background-color: rgba(255, 255, 255, 0.15);
+        /* Optional: gives a slight "press" effect */
+        transform: translateY(-1px);
+      }
+
+      /* Override for the active link to ensure it uses the smooth-nav-link styles */
+      .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    </style>
   </head>
   <body class="bg-light">
     <%- include("../partials/navbar") %>
-    <div class="container mt-5 pt-5"><%- body %></div>
+    <div class="container"><%- body %></div>
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

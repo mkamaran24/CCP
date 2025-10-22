@@ -1,84 +1,428 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page">
-      Subscriber Number - 7508788105
-    </li>
-  </ol>
-</nav>
-
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/offers/view">Offers</a></li>
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb bg-transparent">
     <li class="breadcrumb-item">
-      <a href="/account-balance/view">AccountBalance</a>
+      <i class="bi bi-person-circle me-1"></i>
+      <span class="text-muted">Subscriber Number -</span>
+      <strong>7508788105</strong>
     </li>
   </ol>
 </nav>
 
-<div class="container mt-4">
-  <div class="d-flex justify-content-end mb-3">
-    <!-- <button class="btn btn-outline-success me-2" type="button">
-      <i class="bi bi-plus-lg"></i> Add Offer
-    </button> -->
-    <button class="btn btn-outline-danger" type="button">
-      <i class="bi bi-trash-fill"></i> Delete All
-    </button>
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb bg-light px-3 py-2 rounded">
+    <li class="breadcrumb-item">
+      <a href="/" class="text-decoration-none">
+        <i class="bi bi-house-door me-1"></i>Home
+      </a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/offers/view" class="text-decoration-none">
+        <i class="bi bi-tag me-1"></i>Offers
+      </a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="#" class="text-decoration-none">
+        <i class="bi bi-wallet2 me-1"></i>AccountBalance
+      </a>
+    </li>
+  </ol>
+</nav>
+
+<div class="container-fluid px-4">
+  <!-- Page Header with gradient background -->
+  <div class="page-header-card mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h4 class="page-title mb-2">
+          <i class="bi bi-gift-fill me-2"></i>FreeUnits Management
+        </h4>
+        <p class="page-subtitle mb-0">
+          Manage subscriber free units and allocations
+        </p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-delete-custom" type="button" id="deleteAllBtn">
+          <i class="bi bi-trash-fill me-2"></i>Delete All
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <table class="table table-striped table-hover align-middle caption-top">
-      <caption>
-        List of FreeUnits
-      </caption>
+  <!-- FreeUnits Table -->
+  <div class="offers-table-wrapper">
+    <div class="table-header">
+      <h5 class="table-title mb-0">
+        <i class="bi bi-list-ul me-2"></i>List of FreeUnits
+      </h5>
+      <span class="offer-count-badge">
+        <%= response.raw ? response.raw.length : 0 %> FreeUnits
+      </span>
+    </div>
 
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">FreeUnit</th>
-          <th scope="col">FreeUnitName</th>
-          <th scope="col">UnitType</th>
-          <th scope="col">InstanceID</th>
-          <th scope="col">InitialAmount</th>
-          <th scope="col">CurrentAmount</th>
-          <th scope="col">EffectiveTime</th>
-          <th scope="col">ExpireTime</th>
-          <th scope="col" class="text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (response.raw && response.raw.length > 0) { %> <%
-        response.raw.forEach((arrv) => { %>
-        <tr>
-          <td scope="row"><%= arrv.FreeUnitType %></td>
-          <td><%= arrv.FreeUnitTypeName %></td>
-          <td><%= arrv.MeasureUnitName %></td>
-          <td><%= arrv.FreeUnitInstanceID %></td>
-          <td><%= arrv.InitialAmount %></td>
-          <td><%= arrv.CurrentAmount %></td>
-          <td><%= arrv.EffectiveTime %></td>
-          <td><%= arrv.ExpireTime %></td>
-          <td class="text-center">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              title="Delete FreeUnit"
-              data-offer-id="<%= arrv.FreeUnitInstanceID %>"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
-        <% }) %> <% } else { %>
-        <tr>
-          <td colspan="9" class="text-center text-muted">
-            No FreeUnits found.
-          </td>
-        </tr>
-        <% } %>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th class="th-col"><i class="bi bi-box me-1"></i>FreeUnit</th>
+            <th class="th-col">
+              <i class="bi bi-tag-fill me-1"></i>FreeUnit Name
+            </th>
+            <th class="th-col">
+              <i class="bi bi-diagram-3 me-1"></i>Unit Type
+            </th>
+            <th class="th-col"><i class="bi bi-hash me-1"></i>Instance ID</th>
+            <th class="th-col">
+              <i class="bi bi-plus-circle me-1"></i>Initial Amount
+            </th>
+            <th class="th-col">
+              <i class="bi bi-bar-chart me-1"></i>Current Amount
+            </th>
+            <th class="th-col">
+              <i class="bi bi-calendar-check me-1"></i>Effective Time
+            </th>
+            <th class="th-col">
+              <i class="bi bi-calendar-x me-1"></i>Expire Time
+            </th>
+            <th class="th-action text-center">
+              <i class="bi bi-gear-fill me-1"></i>Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (response.raw && response.raw.length > 0) { %> <%
+          response.raw.forEach((arrv) => { %>
+          <tr>
+            <td class="td-col">
+              <span class="type-badge"><%= arrv.FreeUnitType %></span>
+            </td>
+            <td class="td-col fw-medium"><%= arrv.FreeUnitTypeName %></td>
+            <td class="td-col">
+              <span class="unit-badge"> <%= arrv.MeasureUnitName %> </span>
+            </td>
+            <td class="td-col">
+              <span class="instance-badge"><%= arrv.FreeUnitInstanceID %></span>
+            </td>
+            <td class="td-col">
+              <span class="amount-badge initial">
+                <%= arrv.InitialAmount %>
+              </span>
+            </td>
+            <td class="td-col">
+              <span class="amount-badge current">
+                <%= arrv.CurrentAmount %>
+              </span>
+            </td>
+            <td class="td-col text-muted small"><%= arrv.EffectiveTime %></td>
+            <td class="td-col text-muted small"><%= arrv.ExpireTime %></td>
+            <td class="td-action text-center">
+              <button
+                type="button"
+                class="btn-delete-row"
+                title="Delete FreeUnit"
+                data-offer-id="<%= arrv.FreeUnitInstanceID %>"
+              >
+                <i class="bi bi-trash me-1"></i>Delete
+              </button>
+            </td>
+          </tr>
+          <% }) %> <% } else { %>
+          <tr>
+            <td colspan="9" class="empty-state">
+              <div class="empty-content">
+                <i class="bi bi-inbox empty-icon"></i>
+                <h5 class="empty-title">No FreeUnits found</h5>
+                <p class="empty-text">No free units are currently allocated</p>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+
+<style>
+  /* Page Header Card */
+  .page-header-card {
+    background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(12, 74, 110, 0.2);
+    color: white;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+  }
+
+  .page-subtitle {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Custom Buttons */
+  .btn-delete-custom {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  }
+
+  .btn-delete-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+    background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+    color: white;
+  }
+
+  /* Breadcrumb Styling */
+  .breadcrumb {
+    background: transparent;
+    padding: 0.5rem 0;
+    margin-bottom: 0;
+  }
+
+  .breadcrumb-item a {
+    color: #0c4a6e;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumb-item a:hover {
+    color: #075985;
+  }
+
+  /* Table Wrapper */
+  .offers-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .table-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #cbd5e1;
+  }
+
+  .table-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+  }
+
+  .offer-count-badge {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Table Container */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+  }
+
+  /* Table Head */
+  .custom-table thead {
+    background: #0c4a6e;
+    color: white;
+  }
+
+  .custom-table thead th {
+    padding: 1rem 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+  }
+
+  /* Table Body */
+  .custom-table tbody tr {
+    background: white;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .custom-table tbody tr:hover {
+    background: #f1f5f9;
+    transform: scale(1.001);
+  }
+
+  .custom-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .custom-table tbody td {
+    padding: 1rem 1rem;
+    vertical-align: middle;
+    color: #334155;
+    font-size: 0.9rem;
+  }
+
+  /* Badge Styles */
+  .type-badge {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: inline-block;
+  }
+
+  .instance-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+    display: inline-block;
+    font-family: monospace;
+  }
+
+  .unit-badge {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .amount-badge {
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+  }
+
+  .amount-badge.initial {
+    background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+    color: #5b21b6;
+  }
+
+  .amount-badge.current {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+  }
+
+  /* Delete Button in Row */
+  .btn-delete-row {
+    background: white;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-delete-row:hover {
+    background: #dc2626;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 4rem 2rem !important;
+    text-align: center;
+  }
+
+  .empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    color: #cbd5e1;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #475569;
+    margin: 0;
+  }
+
+  .empty-text {
+    color: #94a3b8;
+    margin: 0;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .page-header-card {
+      padding: 1.5rem;
+    }
+
+    .page-header-card .d-flex {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start !important;
+    }
+
+    .page-header-card .d-flex > div:last-child {
+      width: 100%;
+    }
+
+    .page-header-card .btn {
+      width: 100%;
+    }
+
+    .table-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start !important;
+    }
+
+    .custom-table {
+      font-size: 0.8rem;
+    }
+
+    .custom-table thead th,
+    .custom-table tbody td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+</style>
 
 <script>
   document
@@ -86,18 +430,22 @@
     .forEach((btn) => {
       btn.addEventListener("click", async () => {
         const offerId = btn.dataset.offerId;
-        // const purchaseSeq = btn.dataset.purchaseSeq;
-
-        // if (!confirm(`Are you sure you want to delete offer ID ${offerId}?`)) {
-        //   return;
-        // }
 
         const confirmResult = await Swal.fire({
           title: "Are you sure?",
           text: `Delete InstanceID ${offerId}?`,
           icon: "warning",
           showCancelButton: true,
-          confirmButtonText: "Yes, delete it!",
+          confirmButtonColor: "#dc2626",
+          cancelButtonColor: "#64748b",
+          confirmButtonText:
+            '<i class="bi bi-check-circle me-2"></i>Yes, delete it!',
+          cancelButtonText: '<i class="bi bi-x-circle me-2"></i>Cancel',
+          customClass: {
+            popup: "swal-custom-popup",
+            confirmButton: "swal-custom-confirm",
+            cancelButton: "swal-custom-cancel",
+          },
         });
 
         if (!confirmResult.isConfirmed) {
@@ -116,34 +464,25 @@
 
         const result = await response.json();
         Swal.fire({
-          title: `FreeUnit Id ${offerId}`,
-          text: "This will close in 1 seconds.",
+          title: "Deleted!",
+          text: `FreeUnit ID ${offerId} has been deleted successfully.`,
           icon: "success",
-          timer: 1000,
+          timer: 1500,
           showConfirmButton: false,
+          customClass: {
+            popup: "swal-custom-popup",
+          },
           willClose: () => {
-            location.reload(); // only reload after alert finishes
+            location.reload();
           },
         });
-
-        // try {
-        //   // if (result.success) {
-        //   //   alert(`Offer ${offerId} deleted successfully.`);
-        //   //   location.reload(); // Refresh to update table
-        //   // } else {
-        //   //   alert(`Failed to delete offer: ${result.message || "Unknown error"}`);
-        //   // }
-        // } catch (error) {
-        //   console.error("Error deleting offer:", error);
-        //   alert("An error occurred while deleting the offer.");
-        // }
       });
     });
 </script>
 
 <script>
   document
-    .querySelector(".btn-outline-danger")
+    .getElementById("deleteAllBtn")
     .addEventListener("click", async () => {
       const rows = document.querySelectorAll("tbody tr");
       const offers = [];
@@ -158,40 +497,69 @@
       });
 
       if (offers.length === 0) {
-        Swal.fire(
-          "No FreeUnits found!",
-          "There are no FreeUnit to delete.",
-          "info"
-        );
+        Swal.fire({
+          title: "No FreeUnits found!",
+          text: "There are no FreeUnits to delete.",
+          icon: "info",
+          confirmButtonColor: "#0c4a6e",
+          customClass: {
+            popup: "swal-custom-popup",
+            confirmButton: "swal-custom-confirm",
+          },
+        });
         return;
       }
 
       const confirm = await Swal.fire({
         title: "Delete All FreeUnits?",
-        text: `You are about to delete ${offers.length} FreeUnits.`,
+        html: `
+          <p>You are about to delete <strong>${
+            offers.length
+          }</strong> FreeUnit${offers.length > 1 ? "s" : ""}.</p>
+          <p class="text-muted mb-0">This action cannot be undone!</p>
+        `,
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete all!",
-        cancelButtonText: "Cancel",
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#64748b",
+        confirmButtonText:
+          '<i class="bi bi-trash-fill me-2"></i>Yes, delete all!',
+        cancelButtonText: '<i class="bi bi-x-circle me-2"></i>Cancel',
+        customClass: {
+          popup: "swal-custom-popup",
+          confirmButton: "swal-custom-confirm",
+          cancelButton: "swal-custom-cancel",
+        },
       });
 
       if (!confirm.isConfirmed) return;
 
-      // Show progress bar
       Swal.fire({
         title: "Deleting FreeUnits...",
         html: `
-        <div id="progress-text" class="mb-2">Starting...</div>
-        <div class="progress" style="height: 20px;">
-          <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+        <div id="progress-text" class="mb-3 fw-bold" style="color: #0c4a6e;">Initializing deletion process...</div>
+        <div class="progress" style="height: 28px; border-radius: 14px; overflow: hidden;">
+          <div id="progress-bar" 
+               class="progress-bar progress-bar-striped progress-bar-animated" 
+               style="width: 0%; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);" 
+               role="progressbar">
+            <span style="font-weight: 600;">0%</span>
+          </div>
+        </div>
+        <div class="mt-3" style="color: #64748b; font-size: 0.95rem;">
+          <strong><span id="deleted-count">0</span></strong> of <strong><span id="total-count">${offers.length}</span></strong> FreeUnits deleted
         </div>
       `,
         allowOutsideClick: false,
         allowEscapeKey: false,
-        showConfirmButton: false, // ✅ hides OK button
+        showConfirmButton: false,
+        customClass: {
+          popup: "swal-custom-popup",
+        },
         didOpen: async () => {
           const progressBar = document.getElementById("progress-bar");
           const progressText = document.getElementById("progress-text");
+          const deletedCount = document.getElementById("deleted-count");
 
           let completed = 0;
           for (const offer of offers) {
@@ -206,16 +574,19 @@
               console.error("Error deleting:", offer, err);
             }
             completed++;
+            deletedCount.innerText = completed;
             const percent = Math.round((completed / offers.length) * 100);
             progressBar.style.width = `${percent}%`;
-            progressBar.innerText = `${percent}%`;
+            progressBar.querySelector("span").innerText = `${percent}%`;
           }
 
-          progressText.innerText = "All FreeUnits deleted successfully!";
+          progressText.innerHTML =
+            '<i class="bi bi-check-circle-fill me-2" style="color: #10b981;"></i>All FreeUnits deleted successfully!';
           progressBar.classList.remove("progress-bar-animated");
-          progressBar.classList.add("bg-success");
+          progressBar.style.background =
+            "linear-gradient(135deg, #10b981 0%, #059669 100%)";
 
-          await new Promise((res) => setTimeout(res, 1200)); // small delay before closing
+          await new Promise((res) => setTimeout(res, 1200));
           Swal.close();
           location.reload();
         },

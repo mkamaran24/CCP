@@ -1,12 +1,13 @@
 <% if (response) { %>
-
 <nav
-  class="navbar fixed-top navbar-expand-lg"
-  style="background-color: #e3f2fd"
+  class="navbar fixed-top navbar-expand-lg shadow-lg nav-shadow"
+  style="background-color: #043659"
   data-bs-theme="light"
 >
   <div class="container">
-    <a class="navbar-brand" href="#">CCP Portal</a>
+    <a class="navbar-brand smooth-nav-link" href="#" style="color: white"
+      >CCP Portal</a
+    >
     <button
       class="navbar-toggler"
       type="button"
@@ -21,22 +22,21 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="/offers/view">Offers</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/free-units/view">FreeUnits</a>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link" href="#">Change-Language</a>
+          <a
+            class="nav-link active smooth-nav-link"
+            aria-current="page"
+            href="/"
+            >Home</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Change-IMEI</a>
+          <a class="nav-link smooth-nav-link" href="#">Change-Language</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
+          <a class="nav-link smooth-nav-link" href="#">Change-IMEI</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link smooth-nav-link" href="/logout">Logout</a>
         </li>
       </ul>
       <form action="/search" method="POST" class="d-flex" role="search">
@@ -47,7 +47,13 @@
           aria-label="Search"
           name="number"
         />
-        <button class="btn btn-outline-primary" type="submit">Submit</button>
+        <button
+          class="btn"
+          style="background-color: #ffcd00; color: #043659"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
     </div>
   </div>

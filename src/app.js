@@ -1,6 +1,6 @@
 // app.js (Main Server File)
 import express from "express";
-// import { connectToLdap } from "./services/ldapService.js";
+import { connectToLdap } from "./services/ldapService.js";
 import expressLayouts from "express-ejs-layouts";
 import bodyParser from "body-parser"; // Note: body-parser is redundant since express.urlencoded is used
 import session from "express-session";
@@ -36,6 +36,9 @@ app.use(
   })
 );
 
+// With this:
+app.use("/img", express.static(path.join(__dirname, "img")));
+
 // --- NEW: Authentication Middleware ---
 const checkAuth = (req, res, next) => {
   // If the session has the 'isAuthenticated' flag set, continue
@@ -49,12 +52,12 @@ const checkAuth = (req, res, next) => {
 // --- LDAP Login POST Endpoint (Updated to use session) ---
 app.post("/ldap-login", async (req, res) => {
   const { username, password } = req.body; // In a real app, you might want to sanitize the username before passing it to LDAP
-  var isAuthenticated = false;
-  // const isAuthenticated = await connectToLdap(username, password);
+  // var isAuthenticated = false;
+  const isAuthenticated = await connectToLdap(username, password);
 
-  if (username == "root" && password == "123") {
-    isAuthenticated = true;
-  }
+  // if (username == "root" && password == "123") {
+  //   isAuthenticated = true;
+  // }
 
   if (isAuthenticated) {
     // ⭐ SUCCESS: Set session flag and redirect

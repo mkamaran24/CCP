@@ -1,5 +1,6 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+<!-- Improved Content -->
+<nav aria-label="breadcrumb" style="margin-top: 80px; margin-bottom: 2px">
+  <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item active" aria-current="page">
       Subscriber Number - <% if (response && response.number) { %> <%=
       response.number %> <% } else { %> (Number Not Found) <% } %>
@@ -7,19 +8,227 @@
   </ol>
 </nav>
 
-<div class="container my-5">
+<div class="container" style="padding-top: 1rem; padding-bottom: 2rem">
   <% if (response && response.number) { %>
-  <div class="row g-3">
+
+  <!-- Subscriber Profile Card -->
+  <div
+    class="card shadow-sm border-0 mb-3"
+    style="border-radius: 12px; overflow: hidden"
+  >
+    <div
+      class="card-header text-white py-3"
+      style="background: linear-gradient(135deg, #043659 0%, #065a8f 100%)"
+    >
+      <h5 class="fw-bold text-center mb-0" style="font-size: 1.1rem">
+        <i class="bi bi-person-circle me-2"></i>Subscriber Profile Details
+      </h5>
+    </div>
+    <div class="card-body p-3 p-md-4" style="background: #f8f9fa">
+      <!-- First Row -->
+      <div class="row g-2 g-md-3 mb-2 mb-md-3">
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #043659"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Language</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <% if (extracted.data.raw.WrittenLang == 2002) { %>
+              <i class="bi bi-translate me-1" style="color: #043659"></i>English
+              <% } else if (extracted.data.raw.WrittenLang == 2073) { %>
+              <i class="bi bi-translate me-1" style="color: #043659"></i>Arabic
+              <% } else if (extracted.data.raw.WrittenLang == 2074) { %>
+              <i class="bi bi-translate me-1" style="color: #043659"></i>Kurdish
+              (Iraq) <% } else if (extracted.data.raw.WrittenLang == 2078) { %>
+              <i class="bi bi-translate me-1" style="color: #043659"></i>Kurdish
+              <% } else { %> Unknown (<%= extracted.data.raw.WrittenLang %>) <%
+              } %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #48bb78"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >SIM Status</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #48bb78; font-size: 0.9rem"
+            >
+              <i class="bi bi-check-circle-fill me-1"></i><%=
+              extracted.data.raw.LifeCycleStatus %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #065a8f"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Primary Offer ID</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <%= extracted.data.raw.PrimaryOfferingId %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #0a7bb8"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Primary Offer Name</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <%= extracted.data.raw.PrimaryOfferingName %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Row -->
+      <div class="row g-2 g-md-3">
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #ffcd00"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >IMEI</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <%= extracted.data.raw.CN_SUB_IMEI %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #ed8936"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Location</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <i class="bi bi-geo-alt-fill me-1" style="color: #ed8936"></i><%=
+              extracted.data.raw.CN_SUB_LOCATION %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #38b2ac"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Main Balance</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #38b2ac; font-size: 0.9rem"
+            >
+              <i class="bi bi-wallet2 me-1"></i><%=
+              extracted.data.raw.MainBalance %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+          <div
+            class="bg-white p-2 p-md-3 rounded-3 h-100 shadow-sm"
+            style="border-left: 4px solid #9f7aea"
+          >
+            <small
+              class="text-muted d-block text-uppercase fw-medium mb-1"
+              style="font-size: 0.65rem; letter-spacing: 0.5px"
+              >Payment Mode</small
+            >
+            <span
+              class="fw-bold d-block"
+              style="color: #2d3748; font-size: 0.9rem"
+            >
+              <%= extracted.data.raw.PaymentMode %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Cards - Compact and Improved -->
+  <div class="row g-2 g-md-3">
     <div class="col-sm-4">
       <a
         href="/offers/view"
-        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
-        style="transition: transform 0.2s; display: block"
-        onmouseover="this.style.transform='translateY(-5px)'"
-        onmouseout="this.style.transform='translateY(0)'"
+        class="card h-100 text-decoration-none border-0 shadow-sm action-card"
+        style="
+          border-radius: 10px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: block;
+          overflow: hidden;
+        "
       >
-        <div class="card-body text-center py-4">
-          <h5 class="card-title text-uppercase fw-bold mb-0">Offers</h5>
+        <div
+          class="card-body text-center py-3"
+          style="background: white; border-left: 4px solid #043659"
+        >
+          <div class="mb-2">
+            <i
+              class="bi bi-gift-fill"
+              style="font-size: 2rem; color: #043659"
+            ></i>
+          </div>
+          <h6
+            class="card-title text-uppercase fw-bold mb-1"
+            style="letter-spacing: 0.5px; font-size: 0.85rem; color: #043659"
+          >
+            Offers
+          </h6>
+          <p class="text-muted mb-0" style="font-size: 0.75rem">
+            View available offers
+          </p>
         </div>
       </a>
     </div>
@@ -27,41 +236,127 @@
     <div class="col-sm-4">
       <a
         href="/free-units/view"
-        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
-        style="transition: transform 0.2s; display: block"
-        onmouseover="this.style.transform='translateY(-5px)'"
-        onmouseout="this.style.transform='translateY(0)'"
+        class="card h-100 text-decoration-none border-0 shadow-sm action-card"
+        style="
+          border-radius: 10px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: block;
+          overflow: hidden;
+        "
       >
-        <div class="card-body text-center py-4">
-          <h5 class="card-title text-uppercase fw-bold mb-0">Free Units</h5>
+        <div
+          class="card-body text-center py-3"
+          style="background: white; border-left: 4px solid #065a8f"
+        >
+          <div class="mb-2">
+            <i class="bi bi-stars" style="font-size: 2rem; color: #065a8f"></i>
+          </div>
+          <h6
+            class="card-title text-uppercase fw-bold mb-1"
+            style="letter-spacing: 0.5px; font-size: 0.85rem; color: #065a8f"
+          >
+            Free Units
+          </h6>
+          <p class="text-muted mb-0" style="font-size: 0.75rem">
+            Check your free units
+          </p>
         </div>
       </a>
     </div>
 
     <div class="col-sm-4">
       <a
-        href="/balance-page"
-        class="card shadow-sm h-100 text-decoration-none border-primary border-2 border-opacity-25"
-        style="transition: transform 0.2s; display: block"
-        onmouseover="this.style.transform='translateY(-5px)'"
-        onmouseout="this.style.transform='translateY(0)'"
+        href="#"
+        class="card h-100 text-decoration-none border-0 shadow-sm action-card"
+        style="
+          border-radius: 10px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: block;
+          overflow: hidden;
+        "
       >
-        <div class="card-body text-center py-4">
-          <h5 class="card-title text-uppercase fw-bold mb-0">
+        <div
+          class="card-body text-center py-3"
+          style="background: white; border-left: 4px solid #0a7bb8"
+        >
+          <div class="mb-2">
+            <i
+              class="bi bi-wallet2"
+              style="font-size: 2rem; color: #0a7bb8"
+            ></i>
+          </div>
+          <h6
+            class="card-title text-uppercase fw-bold mb-1"
+            style="letter-spacing: 0.5px; font-size: 0.85rem; color: #0a7bb8"
+          >
             Account Balance
-          </h5>
+          </h6>
+          <p class="text-muted mb-0" style="font-size: 0.75rem">
+            View your balance
+          </p>
         </div>
       </a>
     </div>
   </div>
 
   <% } else { %>
-  <div class="alert alert-warning text-center" role="alert">
-    <h4 class="alert-heading">Welcome! Test User</h4>
-    <p class="mb-0">
-      Please use the search bar above to **enter your subscriber number** and
-      view your profile details.
-    </p>
+  <div
+    class="card border-0 shadow-sm"
+    style="border-radius: 12px; overflow: hidden; margin-top: 10px"
+  >
+    <div
+      class="card-body text-center py-5"
+      style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"
+    >
+      <div class="mb-4">
+        <i class="bi bi-search" style="font-size: 4rem; color: #043659"></i>
+      </div>
+      <h4 class="fw-bold mb-3" style="color: #2d3748">
+        Welcome! <%= response.username %>
+      </h4>
+      <p class="text-muted mb-0" style="font-size: 1.1rem">
+        Please use the search bar above to enter your subscriber number and view
+        your profile details.
+      </p>
+    </div>
   </div>
   <% } %>
 </div>
+
+<style>
+  /* Breadcrumb styling */
+  .breadcrumb {
+    background: transparent;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  /* Improved input placeholder styling */
+  /* input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 205, 0, 0.3) !important;
+    border-color: #ffcd00 !important;
+  } */
+
+  /* Action card hover effects */
+  .action-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(4, 54, 89, 0.15) !important;
+  }
+
+  .action-card:active {
+    transform: translateY(-2px);
+  }
+
+  /* Ensure consistent card heights */
+  .action-card .card-body {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+</style>
