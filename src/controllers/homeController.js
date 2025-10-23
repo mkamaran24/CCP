@@ -1,4 +1,7 @@
-import { sendViewSubscriberSOAP } from "../services/homeService.js";
+import {
+  sendViewSubscriberSOAP,
+  updateLangSOAP,
+} from "../services/homeService.js";
 
 export const renderViewHomePage = (req, res) => {
   const fullUsername = req.session.username;
@@ -21,4 +24,20 @@ export const handleViewProfile = async (req, res) => {
     response: { number: req.session.number },
     extracted: { data: result },
   });
+};
+
+export const handleChangeLang = async (req, res) => {
+  // req.session.number = req.body.number;
+  // res.render("pages/Home", { response: { number: req.session.number } });
+
+  const result = await updateLangSOAP(req.body.number, req.body.lang);
+  return {
+    code: 0,
+    description: "Lang Changed",
+  };
+
+  // req.session.viewSubInfo = result;
+  // res.render("pages/Home", {
+  //   response: { number: req.session.number },
+  // });
 };

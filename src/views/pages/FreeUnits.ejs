@@ -1,4 +1,4 @@
-<nav aria-label="breadcrumb" class="mb-3">
+<nav aria-label="breadcrumb" class="mb-3 mt-2">
   <ol class="breadcrumb bg-transparent">
     <li class="breadcrumb-item">
       <i class="bi bi-person-circle me-1"></i>
@@ -63,6 +63,9 @@
       <table class="custom-table">
         <thead>
           <tr>
+            <th class="th-action text-center">
+              <i class="bi bi-gear-fill me-1"></i>Action
+            </th>
             <th class="th-col"><i class="bi bi-box me-1"></i>FreeUnit</th>
             <th class="th-col">
               <i class="bi bi-tag-fill me-1"></i>FreeUnit Name
@@ -83,15 +86,22 @@
             <th class="th-col">
               <i class="bi bi-calendar-x me-1"></i>Expire Time
             </th>
-            <th class="th-action text-center">
-              <i class="bi bi-gear-fill me-1"></i>Action
-            </th>
           </tr>
         </thead>
         <tbody>
           <% if (response.raw && response.raw.length > 0) { %> <%
           response.raw.forEach((arrv) => { %>
           <tr>
+            <td class="td-action text-center">
+              <button
+                type="button"
+                class="btn-delete-row"
+                title="Delete FreeUnit"
+                data-offer-id="<%= arrv.FreeUnitInstanceID %>"
+              >
+                <i class="bi bi-trash me-1"></i>Delete
+              </button>
+            </td>
             <td class="td-col">
               <span class="type-badge"><%= arrv.FreeUnitType %></span>
             </td>
@@ -114,16 +124,6 @@
             </td>
             <td class="td-col text-muted small"><%= arrv.EffectiveTime %></td>
             <td class="td-col text-muted small"><%= arrv.ExpireTime %></td>
-            <td class="td-action text-center">
-              <button
-                type="button"
-                class="btn-delete-row"
-                title="Delete FreeUnit"
-                data-offer-id="<%= arrv.FreeUnitInstanceID %>"
-              >
-                <i class="bi bi-trash me-1"></i>Delete
-              </button>
-            </td>
           </tr>
           <% }) %> <% } else { %>
           <tr>
@@ -342,7 +342,7 @@
     background: white;
     color: #dc2626;
     border: 2px solid #dc2626;
-    padding: 0.4rem 1rem;
+    padding: 5px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.8rem;

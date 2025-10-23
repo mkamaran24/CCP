@@ -41,6 +41,12 @@
       .nav-link.active {
         background-color: rgba(255, 255, 255, 0.1);
       }
+      .submit-language-button {
+        /* Sets the background of the main alert box */
+        background: #ffcd00 !important;
+        /* Adjust text color for contrast if needed */
+        color: #043659;
+      }
     </style>
   </head>
   <body class="bg-light">
@@ -49,5 +55,114 @@
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const changeLanguageLink =
+          document.getElementById("changeLanguageLink");
+
+        if (changeLanguageLink) {
+          changeLanguageLink.addEventListener("click", function (e) {
+            e.preventDefault(); // Prevent default link behavior
+
+            const languages = [
+              { value: "2078", text: "Kurdish-Uni" },
+              { value: "2074", text: "Kurdish" },
+              { value: "2073", text: "Arabic" },
+              { value: "2002", text: "English" },
+            ];
+
+            const languageOptions = languages
+              .map(
+                (lang) => `<option value="${lang.value}">${lang.text}</option>`
+              )
+              .join("");
+
+            const selectHtml = `
+                <div style="text-align: left; margin-top: 15px;">
+                    <label for="languageSelect" class="swal2-label">Select a Language:</label>
+                    <select id="languageSelect" class="swal2-input" style="width: 100%; display: block; margin-top: 5px;">
+                        ${languageOptions}
+                    </select>
+                </div>
+            `;
+
+            Swal.fire({
+              title: "Select New Language",
+              html: selectHtml,
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonText: "Submit Change",
+              cancelButtonText: "Cancel",
+              focusConfirm: false,
+
+              // Custom classes for styling
+              customClass: {
+                popup: "language-modal-popup",
+                confirmButton: "submit-language-button",
+              },
+
+              preConfirm: () => {
+                const selectedLanguage =
+                  document.getElementById("languageSelect").value;
+                if (!selectedLanguage) {
+                  Swal.showValidationMessage("Please select a language!");
+                  return false;
+                }
+                return selectedLanguage;
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                const newLanguage = result.value;
+
+                console.log(newLanguage);
+
+                // ----------------------------------------------------
+                // 🔥 NEW: Fetch Request to Change Language & Reload
+                // ----------------------------------------------------
+                fetch("/lang", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    // Include headers like CSRF token if your framework requires them
+                  },
+                  body: JSON.stringify({ lang: newLanguage }),
+                })
+                  .then((response) => {
+                    // Check if the response was successful (status 200-299)
+                    if (!response.ok) {
+                      // If the server returns an error (e.g., 401, 500)
+                      throw new Error(
+                        `Server responded with status: ${response.status}`
+                      );
+                    }
+                    return response.json(); // or response.text() if your server doesn't return JSON
+                  })
+                  .then((data) => {
+                    // Success confirmation and page reload
+                    Swal.fire({
+                      title: "Success!",
+                      text: `Language set to ${newLanguage.toUpperCase()}. Reloading page...`,
+                      icon: "success",
+                      timer: 1500, // Short timer before reload
+                      showConfirmButton: false,
+                    });
+                  })
+                  .catch((error) => {
+                    // Handle network errors or server-side errors
+                    console.error("Language change failed:", error);
+                    Swal.fire({
+                      title: "Error!",
+                      text: "Could not change language. Please try again.",
+                      icon: "error",
+                    });
+                  });
+                // ----------------------------------------------------
+              }
+            });
+          });
+        }
+      });
+    </script>
   </body>
 </html>

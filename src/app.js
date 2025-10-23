@@ -1,5 +1,6 @@
 // app.js (Main Server File)
 import express from "express";
+import axios from "axios";
 import { connectToLdap } from "./services/ldapService.js";
 import expressLayouts from "express-ejs-layouts";
 import bodyParser from "body-parser"; // Note: body-parser is redundant since express.urlencoded is used
@@ -35,6 +36,64 @@ app.use(
     },
   })
 );
+
+app.use("/lang", async (req, res) => {
+  console.log(`${req.session.number} and ${req.body.lang}`);
+
+  const soapEnvelope = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bcs="http://www.huawei.com/bme/cbsinterface/bcservices" xmlns:cbs="http://www.huawei.com/bme/cbsinterface/cbscommon" xmlns:bcc="http://www.huawei.com/bme/cbsinterface/bccommon">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <bcs:ChangeSubInfoRequestMsg>
+         <RequestHeader>
+            <cbs:Version>1</cbs:Version>
+            <!--Optional:-->
+            <cbs:BusinessCode>CreateSubscriber</cbs:BusinessCode>
+          <cbs:MessageSeq>${Date.now()}</cbs:MessageSeq>
+            <!--Optional:-->
+            <cbs:OwnershipInfo>
+               <cbs:BEID>101</cbs:BEID>
+            </cbs:OwnershipInfo>
+            <cbs:AccessSecurity>
+               <cbs:LoginSystemCode>Subscription</cbs:LoginSystemCode>
+               <cbs:Password>Sfs58abIHVrbiQBUZoY0PzzK986uovZBGCZpWWu7FMNDVirZOTck297RqpCutw==</cbs:Password>
+            </cbs:AccessSecurity>
+            <!--Optional:-->
+            <cbs:OperatorInfo>
+               <cbs:OperatorID>101</cbs:OperatorID>
+            </cbs:OperatorInfo>
+         </RequestHeader>
+         <ChangeSubInfoRequest>
+            <bcs:SubAccessCode>
+               <!--You have a CHOICE of the next 2 items at this level-->
+               <bcc:PrimaryIdentity>${req.session.number}</bcc:PrimaryIdentity>
+            </bcs:SubAccessCode>
+            <!--Optional:-->
+            <bcs:SubBasicInfo>
+               <!--Optional:-->
+               <bcc:WrittenLang>${req.body.lang}</bcc:WrittenLang>
+               <!--Optional:-->
+               <bcc:IVRLang>${req.body.lang}</bcc:IVRLang>
+            </bcs:SubBasicInfo>
+         </ChangeSubInfoRequest>
+      </bcs:ChangeSubInfoRequestMsg>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+
+  const { data } = await axios.post(
+    "http://10.30.96.6:8080/services/BcServices",
+    soapEnvelope,
+    {
+      headers: { "Content-Type": "text/xml;charset=UTF-8" },
+      httpsAgent: new (
+        await import("https")
+      ).Agent({ rejectUnauthorized: false }),
+    }
+  );
+  res.json({
+    code: 0,
+    message: "sucess",
+  });
+});
 
 // With this:
 app.use("/img", express.static(path.join(__dirname, "img")));

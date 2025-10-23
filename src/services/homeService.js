@@ -4,6 +4,67 @@ import { XMLParser } from "fast-xml-parser";
 
 dotenv.config();
 
+export async function updateLangSOAP(msisdn, lang) {
+  console.log(`${msisdn} and ${lang}`);
+
+  const soapXml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bcs="http://www.huawei.com/bme/cbsinterface/bcservices" xmlns:cbs="http://www.huawei.com/bme/cbsinterface/cbscommon" xmlns:bcc="http://www.huawei.com/bme/cbsinterface/bccommon">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <bcs:ChangeSubInfoRequestMsg>
+         <RequestHeader>
+            <cbs:Version>1</cbs:Version>
+            <!--Optional:-->
+            <cbs:BusinessCode>CreateSubscriber</cbs:BusinessCode>
+            <cbs:MessageSeq>${Date.now()}</cbs:MessageSeq>            
+            <!--Optional:-->
+            <cbs:OwnershipInfo>
+               <cbs:BEID>101</cbs:BEID>
+            </cbs:OwnershipInfo>
+            <cbs:AccessSecurity>
+               <cbs:LoginSystemCode>Subscription</cbs:LoginSystemCode>
+               <cbs:Password>Sfs58abIHVrbiQBUZoY0PzzK986uovZBGCZpWWu7FMNDVirZOTck297RqpCutw==</cbs:Password>
+            </cbs:AccessSecurity>
+            <!--Optional:-->
+            <cbs:OperatorInfo>
+               <cbs:OperatorID>101</cbs:OperatorID>
+            </cbs:OperatorInfo>
+         </RequestHeader>
+         <ChangeSubInfoRequest>
+            <bcs:SubAccessCode>
+               <!--You have a CHOICE of the next 2 items at this level-->
+               <bcc:PrimaryIdentity>${msisdn}</bcc:PrimaryIdentity>
+            </bcs:SubAccessCode>
+            <!--Optional:-->
+            <bcs:SubBasicInfo>
+               <!--Optional:-->
+               <bcc:WrittenLang>${lang}</bcc:WrittenLang>
+               <!--Optional:-->
+               <bcc:IVRLang>${lang}</bcc:IVRLang>
+            </bcs:SubBasicInfo>
+         </ChangeSubInfoRequest>
+      </bcs:ChangeSubInfoRequestMsg>
+   </soapenv:Body>
+</soapenv:Envelope>`;
+
+  const { data } = await axios.post(
+    "http://10.30.96.6:8080/services/BcServices",
+    soapXml,
+    {
+      headers: { "Content-Type": "text/xml;charset=UTF-8" },
+      httpsAgent: new (
+        await import("https")
+      ).Agent({ rejectUnauthorized: false }),
+    }
+  );
+
+  console.log(data);
+
+  return {
+    code: 0,
+    description: "Lang Changed",
+  };
+}
+
 export async function sendViewSubscriberSOAP(msisdn) {
   const soapEnvelope = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bcs="http://www.huawei.com/bme/cbsinterface/bcservices" xmlns:cbs="http://www.huawei.com/bme/cbsinterface/cbscommon" xmlns:bcc="http://www.huawei.com/bme/cbsinterface/bccommon">
   <soapenv:Header/>
