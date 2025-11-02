@@ -16,12 +16,25 @@ export const renderViewHomePage = (req, res) => {
 export const handleViewProfile = async (req, res) => {
   // req.session.number = req.body.number;
   // res.render("pages/Home", { response: { number: req.session.number } });
-
+  const fullUsername = req.session.username;
+  const firstName = fullUsername.split(".")[0];
   req.session.number = req.body.number;
   const result = await sendViewSubscriberSOAP(req.session.number);
   req.session.viewSubInfo = result;
+
+  const hResult = {
+    code: result.raw.ResultHeader["cbs:ResultCode"],
+    desc: result.raw.ResultHeader["cbs:ResultDesc"],
+  };
+
+  console.log(hResult);
+
   res.render("pages/Home", {
-    response: { number: req.session.number },
+    response: {
+      number: req.session.number,
+      header: hResult,
+      username: firstName,
+    },
     extracted: { data: result },
   });
 };

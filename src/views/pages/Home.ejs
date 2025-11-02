@@ -9,7 +9,7 @@
 </nav>
 
 <div class="container" style="padding-top: 1rem; padding-bottom: 2rem">
-  <% if (response && response.number) { %>
+  <% if (response && response.header && response.header.code == 0) { %>
 
   <!-- Subscriber Profile Card -->
   <div
@@ -299,7 +299,19 @@
     </div>
   </div>
 
-  <% } else { %>
+  <% } else { %> <% if (response && response.header && response.header.code > 0)
+  { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error!</strong> <%= response.header.desc %>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  <% } %>
+
   <div
     class="card border-0 shadow-sm"
     style="border-radius: 12px; overflow: hidden; margin-top: 10px"

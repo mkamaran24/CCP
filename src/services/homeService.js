@@ -1,4 +1,5 @@
 import axios from "axios";
+import { log } from "console";
 import dotenv from "dotenv";
 import { XMLParser } from "fast-xml-parser";
 
@@ -126,6 +127,17 @@ export async function sendViewSubscriberSOAP(msisdn) {
   const parser = new XMLParser(options);
   const jsonObj = parser.parse(data);
 
+  // console.log(
+  //   jsonObj["soapenv:Envelope"]?.["soapenv:Body"]?.[
+  //     "bcs:QueryCustomerInfoResultMsg"
+  //   ]?.["ResultHeader"]
+  // );
+
+  const ResultHeader =
+    jsonObj["soapenv:Envelope"]?.["soapenv:Body"]?.[
+      "bcs:QueryCustomerInfoResultMsg"
+    ]?.["ResultHeader"];
+
   const WrittenLang =
     jsonObj["soapenv:Envelope"]?.["soapenv:Body"]?.[
       "bcs:QueryCustomerInfoResultMsg"
@@ -210,6 +222,7 @@ export async function sendViewSubscriberSOAP(msisdn) {
   // 2. Define the subInfo object
   // NOTE: Assuming all variables (WrittenLang, CN_SUB_LOCATION, etc.) are defined in scope.
   var subInfo = {
+    ResultHeader,
     MainBalance,
     WrittenLang,
     // Initially store the code, or skip it for now
