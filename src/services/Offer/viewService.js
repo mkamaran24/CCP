@@ -80,7 +80,7 @@ export async function sendViewOfferSOAP(msisdn) {
       "bcs:SupplementaryOffering"
     ];
 
-  console.log("this after Travers ");
+  // console.log("this after Travers ");
 
   const extractedData = Array.isArray(offerings)
     ? offerings.map((offering) => ({
@@ -98,7 +98,7 @@ export async function sendViewOfferSOAP(msisdn) {
       ]
     : [];
 
-  console.log("Extracted Offerings:", extractedData);
+  // console.log("Extracted Offerings:", extractedData);
 
   return {
     raw: extractedData,

@@ -455,6 +455,110 @@
       });
     });
   });
+
+  // --- Add Offer Logic ---
+  document
+    .querySelector(".btn-add-custom")
+    .addEventListener("click", async () => {
+      const { value: offerId } = await Swal.fire({
+        title:
+          '<i class="bi bi-plus-circle me-2 text-success"></i>Add New Offer',
+        html: `
+                <p class="text-muted mb-4">Enter the **Offer ID** you wish to add to the subscriber.</p>
+                <input 
+                    id="swal-input-offerid" 
+                    class="swal2-input form-control-lg text-center" 
+                    placeholder="e.g., 12345" 
+                    type="number" 
+                    min="1"
+                    style="width: 80%; margin: 0 auto; font-size: 1.25rem;"
+                >
+            `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText:
+          '<i class="bi bi-arrow-right-circle me-1"></i>Add Offer',
+        cancelButtonText: '<i class="bi bi-x-circle me-1"></i>Cancel',
+        confirmButtonColor: "#059669", // Green
+        cancelButtonColor: "#64748b", // Gray
+        preConfirm: () => {
+          const input = document.getElementById("swal-input-offerid");
+          const id = input.value.trim();
+          if (!id || isNaN(parseInt(id)) || parseInt(id) <= 0) {
+            Swal.showValidationMessage(`Please enter a valid Offer ID.`);
+            return false;
+          }
+          return id;
+        },
+        customClass: {
+          popup: "swal-custom-popup",
+          confirmButton: "swal-custom-confirm",
+          cancelButton: "swal-custom-cancel",
+        },
+      });
+
+      if (offerId) {
+        Swal.fire({
+          title: "Adding Offer...",
+          text: `Attempting to add Offer ID: ${offerId}`,
+          icon: "info",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          timer: 5000, // Show for a few seconds while the request runs
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          customClass: {
+            popup: "swal-custom-popup",
+          },
+        });
+
+        try {
+          const response = await fetch("/offers/add", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              offeringId: offerId,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            Swal.fire({
+              title: "Success!",
+              html: `<p>Offer ID **${offerId}** added successfully.</p>`,
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+              customClass: {
+                popup: "swal-custom-popup",
+              },
+              willClose: () => {
+                location.reload();
+              },
+            });
+          } else {
+            throw new Error(result.message || "Failed to add offer.");
+          }
+        } catch (err) {
+          console.error("Add Offer error:", err);
+          Swal.fire({
+            title: "Error!",
+            html: `Failed to add Offer ID **${offerId}**.<br><small>${err.message}</small>`,
+            icon: "error",
+            confirmButtonColor: "#dc2626",
+            customClass: {
+              popup: "swal-custom-popup",
+              confirmButton: "swal-custom-confirm-error",
+            },
+          });
+        }
+      }
+    });
 </script>
 
 <script>

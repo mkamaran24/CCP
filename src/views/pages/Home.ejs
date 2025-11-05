@@ -1,7 +1,11 @@
 <!-- Improved Content -->
 <nav aria-label="breadcrumb" style="margin-top: 80px; margin-bottom: 2px">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item active" aria-current="page">
+    <li
+      class="breadcrumb-item active"
+      aria-current="page"
+      id="subscriberNumberDisplay"
+    >
       Subscriber Number - <% if (response && response.number) { %> <%=
       response.number %> <% } else { %> (Number Not Found) <% } %>
     </li>
@@ -199,7 +203,7 @@
 
   <!-- Action Cards - Compact and Improved -->
   <div class="row g-2 g-md-3">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <a
         href="/offers/view"
         class="card h-100 text-decoration-none border-0 shadow-sm action-card"
@@ -233,7 +237,7 @@
       </a>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <a
         href="/free-units/view"
         class="card h-100 text-decoration-none border-0 shadow-sm action-card"
@@ -264,7 +268,7 @@
       </a>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <a
         href="#"
         class="card h-100 text-decoration-none border-0 shadow-sm action-card"
@@ -296,6 +300,42 @@
           </p>
         </div>
       </a>
+    </div>
+
+    <div class="col-sm-3">
+      <button
+        id="adjustmentCard"
+        class="card h-100 text-decoration-none border-0 shadow-sm action-card"
+        onclick="handleCardClick(event)"
+        style="
+          border-radius: 10px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: block;
+          overflow: hidden;
+          width: 100%; /* Ensure it respects the col-sm-3 width */
+        "
+      >
+        <div
+          class="card-body text-center py-3"
+          style="background: white; border-left: 4px solid #0a7bb8"
+        >
+          <div class="mb-2">
+            <i
+              class="bi bi-currency-dollar"
+              style="font-size: 2rem; color: #0a7bb8"
+            ></i>
+          </div>
+          <h6
+            class="card-title text-uppercase fw-bold mb-1"
+            style="letter-spacing: 0.5px; font-size: 0.85rem; color: #0a7bb8"
+          >
+            MainBalance Adjustment
+          </h6>
+          <p class="text-muted mb-0" style="font-size: 0.75rem">
+            Decrease your balance here
+          </p>
+        </div>
+      </button>
     </div>
   </div>
 
@@ -372,3 +412,129 @@
     justify-content: center;
   }
 </style>
+
+<script>
+  async function handleCardClick(event) {
+    event.preventDefault();
+
+    // 1. Get the HTML element by its ID.
+    const displayElement = document.getElementById("subscriberNumberDisplay");
+
+    // 2. Extract the full text content (e.g., "Subscriber Number - 7508788105").
+    const fullDisplayText = displayElement ? displayElement.textContent : "";
+
+    // 3. To get *just* the number, you'll need to clean up the text.
+    //    A common way is to use a regular expression to find the digits.
+    const subscriberNumberMatch = fullDisplayText.match(/\d+/);
+
+    // 4. Get the matched number, or null/undefined if not found.
+    const subscriberNumber = subscriberNumberMatch
+      ? subscriberNumberMatch[0]
+      : null;
+
+    console.log(subscriberNumber);
+
+    // Step 1: Show modal to get user input for adjustment
+    const { value: adjustment } = await Swal.fire({
+      title: "Main Balance Adjustment",
+      input: "number",
+      inputLabel: "Enter amount to adjust (e.g., -50.00)",
+      inputValue: 0.0,
+      showCancelButton: true,
+      confirmButtonText: "Confirm Update",
+      cancelButtonText: "Cancel",
+      inputValidator: (value) => {
+        if (!value || isNaN(value)) {
+          return "You need to enter a valid number!";
+        }
+      },
+    });
+
+    if (adjustment === undefined || adjustment === null) {
+      // User clicked cancel or dismissed the modal
+      return;
+    }
+
+    // Step 2: Send request for updating main balance (with loading state)
+    try {
+      const adjustmentValue = parseFloat(adjustment);
+      const updateUrl = "/update-mbalance";
+
+      console.log(adjustmentValue);
+
+      // Call Update Main Balance API (using POST as is typical for updates)
+      const updateResponse = await fetch(updateUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          number: subscriberNumber,
+          adjustment: adjustmentValue,
+        }),
+      });
+      console.log(updateResponse);
+
+      if (!updateResponse.ok) {
+        // Try to read server-side error message if available
+        // let errorText = await updateResponse.text();
+        try {
+          errorText = "The account balance is insufficient.";
+        } catch {}
+        throw new Error(`Update Failed: ${errorText}`);
+      }
+
+      // You can optionally read the JSON result here if needed:
+      // const updateResult = await updateResponse.json();
+
+      const subscriberUrl = "/search";
+
+      // Call View Subscriber API
+      const subscriberResponse = await fetch(subscriberUrl, {
+        method: "POST", // Assuming POST based on your endpoint
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ number: subscriberNumber }), // Assuming no additional input is needed
+      });
+
+      // if (true) {
+      //   let errorText = await subscriberResponse.text();
+      //   try {
+      //     errorText = JSON.parse(errorText).message || errorText;
+      //   } catch {}
+      //   throw new Error(
+      //     `View Subscriber Failed: ${errorText} (Status: ${subscriberResponse.status})`
+      //   );
+      // }
+
+      await Swal.fire({
+        title: "Processing Complete...",
+        html: "Preparing final confirmation and redirect...",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timer: 1000, // Show this brief loading state for 1 seconds
+        didOpen: () => {
+          Swal.showLoading(); // Show the loading spinner
+        },
+      });
+
+      // Step 4: Both requests succeeded, show success, then redirect to home
+      await Swal.fire({
+        title: "Success!",
+        html: "Balance updated and subscriber data fetched successfully. Redirecting...",
+        icon: "success",
+        timer: 1500, // Show for 1.5 seconds automatically
+        showConfirmButton: false,
+      });
+
+      // Step 5: Both requests succeeded, redirect to home
+      window.location.href = "/";
+    } catch (error) {
+      // Handle API failure
+      Swal.fire({
+        title: "Operation Failed",
+        icon: "error",
+        html: `<p>${error.message}</p><p class="text-xs mt-2">Could not complete the transaction.</p>`,
+        confirmButtonText: "Close",
+      });
+      console.error("Full error details:", error);
+    }
+  }
+</script>

@@ -12,7 +12,7 @@ export const handleDeleteFreeUnit = async (req, res) => {
   const { offeringId } = req.body;
   const msisdn = req.session.number;
 
-  console.log(offeringId);
+  // console.log(offeringId);
 
   if (!offeringId || !msisdn) {
     return res

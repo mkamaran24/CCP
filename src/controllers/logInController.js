@@ -22,6 +22,7 @@ export const renderLogInPage = (req, res) => {
   res.render("pages/login", {
     response: req.session.isAuthenticated,
     korekLogoPath: "/img/korekLogo.svg", // Changed from ../img to /img
+    bluekorekLogoPath: "/img/bluekorekLogo.svg",
   });
 };
 

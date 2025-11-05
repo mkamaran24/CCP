@@ -38,7 +38,7 @@ app.use(
 );
 
 app.use("/lang", async (req, res) => {
-  console.log(`${req.session.number} and ${req.body.lang}`);
+  // console.log(`${req.session.number} and ${req.body.lang}`);
 
   const soapEnvelope = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:bcs="http://www.huawei.com/bme/cbsinterface/bcservices" xmlns:cbs="http://www.huawei.com/bme/cbsinterface/cbscommon" xmlns:bcc="http://www.huawei.com/bme/cbsinterface/bccommon">
    <soapenv:Header/>
@@ -122,12 +122,12 @@ app.post("/ldap-login", async (req, res) => {
     // ⭐ SUCCESS: Set session flag and redirect
     req.session.isAuthenticated = true;
     req.session.username = username; // Store username in session
-    console.log(`User ${username} logged in.`);
+    // console.log(`User ${username} logged in.`);
     // Redirect to the home page or a protected area
     return res.json({ success: true, redirect: "/" });
   } else {
     // ❌ FAILURE
-    console.log(`Login failed for user ${username}.`);
+    // console.log(`Login failed for user ${username}.`);
     return res
       .status(401)
       .json({ success: false, message: "Invalid credentials" });
